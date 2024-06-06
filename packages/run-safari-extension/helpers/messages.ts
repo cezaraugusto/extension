@@ -4,12 +4,11 @@ import {log, error} from 'console'
 import {
   underline,
   bold,
-  bgCyan,
+  bgWhite,
   green,
   blue,
   red,
   yellow,
-  white,
   magenta,
   cyan
 } from '@colors/colors/safe'
@@ -56,11 +55,11 @@ function extensionData(
     // can't reach the background script. This can be many
     // things such as a mismatch config or if after an error
     // the extension starts disabled. Improve this error.
-    error(`[⛔️] ${bgCyan(white(bold(` edge-browser `)))} ${red(
+    error(`[⛔️] ${bgWhite(cyan(bold(` safari-browser `)))} ${red(
       '✖︎✖︎✖︎'
     )} No data received from client.
 
-Ensure your extension is enabled and that no hanging Edge instance is open then try again.`)
+Ensure your extension is enabled and that no hanging Safari instance is open then try again.`)
 
     process.exit(1)
   }
@@ -71,7 +70,7 @@ Ensure your extension is enabled and that no hanging Edge instance is open then 
   if (!management) {
     if (process.env.EXTENSION_ENV === 'development') {
       error(
-        `[⛔️] ${bgCyan(white(bold(` edge-browser `)))} ${green(
+        `[⛔️] ${bgWhite(cyan(bold(` safari-browser `)))} ${green(
           '►►►'
         )} No management API info received from client. Investigate.`
       )
@@ -111,7 +110,7 @@ Ensure your extension is enabled and that no hanging Edge instance is open then 
   )
   log(
     `${bold(`• Settings URL`)}: ${underline(
-      blue(`edge://extensions/?id=${id}`)
+      blue(`safari://extensions/?id=${id}`)
     )}\n`
   )
 }
@@ -119,11 +118,11 @@ Ensure your extension is enabled and that no hanging Edge instance is open then 
 function stdoutData(compiler: Compiler, message: {data?: Data}) {
   const compilerOptions = compiler.options
   const management = message.data?.management
-  const edgeRuntime = bgCyan(white(bold(` edge-browser `)))
+  const safariRuntime = bgWhite(cyan(bold(` safari-browser `)))
   const modeColor = compilerOptions.mode === 'production' ? magenta : cyan
 
   log(
-    `${edgeRuntime} ${green('►►►')} Running Edge in ${bold(
+    `${safariRuntime} ${green('►►►')} Running Safari in ${bold(
       modeColor(compilerOptions.mode || 'unknown')
     )} mode. Browser ${management?.type} ${bold(
       management?.enabled ? 'enabled' : 'disabled'
@@ -146,7 +145,7 @@ function watchModeClosed(code: number, reason: Buffer) {
   const message = reason.toString()
 
   log(
-    `[😓] ${bgCyan(white(bold(` edge-browser `)))} ${red(
+    `[😓] ${bgWhite(cyan(bold(` safari-browser `)))} ${red(
       '✖︎✖︎✖︎'
     )} Watch mode closed (code ${code}). ${
       message && '\n\nReason: ' + message + '\n'
@@ -154,17 +153,17 @@ function watchModeClosed(code: number, reason: Buffer) {
   )
 }
 
-function browserNotFound(edgePath: string) {
+function browserNotFound(safariPath: string) {
   error(
-    `${bgCyan(white(bold(` edge-browser `)))} ${red(
+    `${bgWhite(cyan(bold(` safari-browser `)))} ${red(
       '✖︎✖︎✖︎'
-    )} Edge not found at ${edgePath}`
+    )} Safari not found at ${safariPath}`
   )
 }
 
 function webSocketError(error: any) {
   error(
-    `[⛔️] ${bgCyan(white(bold(` edge-browser `)))} ${red(
+    `[⛔️] ${bgWhite(cyan(bold(` safari-browser `)))} ${red(
       '✖︎✖︎✖︎'
     )} WebSocket error`,
     error
@@ -173,9 +172,27 @@ function webSocketError(error: any) {
 
 function parseFileError(error: any, filepath: string) {
   error(
-    `[⛔️] ${bgCyan(white(bold(` edge-browser `)))} ${red(
+    `[⛔️] ${bgWhite(cyan(bold(` safari-browser `)))} ${red(
       '✖︎✖︎✖︎'
     )} Error parsing file: ${filepath}. Reason: ${error.message}`
+  )
+}
+
+function macOsOnly() {
+  error(
+    `${bgWhite(cyan(bold(` safari-browser `)))} ${red(
+      '✖︎✖︎✖︎'
+    )} Safari is only available on macOS.`
+  )
+}
+
+function converterNotFound() {
+  error(
+    `${bgWhite(cyan(bold(` safari-browser `)))} ${red(
+      '✖︎✖︎✖︎'
+    )} Safari browser extension converter not found.\n\n` +
+      `To install Xcode and its command line tools, run the following command and try again:\n\n` +
+      `  \`xcode-select --install\``
   )
 }
 
@@ -188,5 +205,7 @@ export default {
   watchModeClosed,
   browserNotFound,
   webSocketError,
-  parseFileError
+  parseFileError,
+  macOsOnly,
+  converterNotFound
 }

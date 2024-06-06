@@ -15,7 +15,7 @@ import startDevServer from './webpack/startDevServer'
 
 export interface DevOptions {
   mode?: 'development' | 'production' | 'none' | undefined
-  browser?: 'chrome' | 'edge' | 'firefox' | 'all'
+  browser?: 'chrome' | 'edge' | 'firefox' | 'safari' | 'all'
   port?: number
   noOpen?: boolean
   userDataDir?: string | boolean

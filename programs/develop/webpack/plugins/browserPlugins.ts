@@ -9,6 +9,7 @@ import type webpack from 'webpack'
 import RunChromeExtension from 'webpack-run-chrome-extension'
 import RunEdgeExtension from 'webpack-run-edge-extension'
 import RunFirefoxAddon from 'webpack-run-firefox-addon'
+import RunSafariExtension from 'webpack-run-safari-extension'
 import {type DevOptions} from '../../extensionDev'
 import {getManifestPath, getOutputPath} from '../config/getPath'
 
@@ -40,6 +41,12 @@ export default function browserPlugins(
   const firefoxConfig = {
     ...chromeConfig,
     port: 8002,
+    stats: true
+  }
+
+  const safariConfig = {
+    ...chromeConfig,
+    port: 8003,
     // If all browsers are being used, we don't need to show the stats
     // for each browser. This is because the stats will be the same for
     // each browser.
@@ -60,6 +67,9 @@ export default function browserPlugins(
           break
         case 'firefox':
           new RunFirefoxAddon(firefoxConfig).apply(compiler)
+          break
+        case 'safari':
+          new RunSafariExtension(safariConfig).apply(compiler)
           break
         default:
           new RunChromeExtension(chromeConfig).apply(compiler)
